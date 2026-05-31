@@ -1,56 +1,44 @@
-# Grainotrope: The Seed Swap Tinder
+# Grainothèque: The seed swap tinder
 
 **A social and eco-friendly platform for swapping seeds.**
 
----
-
-## About the Project
+## About the project
 
 **Themes:** Agriculture, Social Impact
 **Focus for Beginners:** Mastering full **CRUD** operations (Create, Read, Update, Delete) and image uploads.
 
 In the world of eco-responsible gardening, enthusiasts love to exchange seeds. **Grainotrope** connects individuals to swap their seeds (tomatoes, flowers, etc.) and foster a community around sustainable agriculture.
 
----
-
 ## Features
 
-### Seed Catalog
+### Seed catalog
 - A homepage listing available seeds with **server-side filtering** (by plant type, sowing period).
 - Dynamic cards displaying seed images, names, and availability.
 
-### My Garden Space
+### My garden space
 - A form to add seeds, with client-side validation and image upload (stored via Cloudinary or local storage).
 - Each seed entry includes: image, description, quantity, and owner contact info.
 
-### Swap Request System
-- A "Request a Swap" button that opens a pre-filled contact form (using the seed owner’s email).
+### Swap request system
+- A "request a swap" button that opens a pre-filled contact form (using the seed owner’s email).
 - Messages are sent via a simple email service (e.g., Nodemailer).
 
----
-
-## What This Project Demonstrates
+## What this project demonstrates
 
 - **Database Design**: Structuring a relational database (PostgreSQL) for seeds, users, and swaps.
 - **Full-Stack Development**: Building a REST API (Node/Express) and a dynamic frontend (React).
 - **Form Handling**: Validating user inputs (e.g., seed name, quantity, image upload).
 - **UI/UX**: Displaying dynamic seed cards with filters and user interactions.
 
----
-
-## Tech Stack
+## Tech stack
    Category     | Technology      |
  | ------------ | --------------- |
  | **Frontend** | React           |
  | **Backend**  | Node.js/Express |
  | **Database** | PostgreSQL      |
 
-**Why a Unified JavaScript Stack?**
+**Why a unified JavaScript stack?**
 JavaScript is one of the most widely used programming languages today. Using a full JavaScript stack (React for frontend, Node.js/Express for backend, and PostgreSQL for the database) allows for a **consistent and cohesive development experience**. React is a popular choice for building interactive user interfaces, while Node.js and PostgreSQL provide a solid foundation for the backend. This combination benefits from a **large ecosystem** (npm packages, extensive documentation) and makes it easier to switch between frontend and backend development without changing languages.
-
-> *Note: Async/await and promises can be challenging at first, but they are essential for handling API calls and database queries efficiently.*
-
----
 
 ## Testing Approach
 
@@ -78,9 +66,7 @@ it('POST /seeds → 201', async () => {
 });
 ```
 
-> *Full test files example: [test.rest](./backend/test/)*
-
----
+> *Full test files example in folder: [test](./backend/test/)*
 
 ## Getting Started
 
@@ -101,18 +87,10 @@ it('POST /seeds → 201', async () => {
   ```
 3. Set up your `.env` file with database and API keys.
 
----
-
 ## Roadmap
 
-[x] **Database**: Finalize SQL schema (tables: seeds, users, swaps).
-[x] **Backend**: Implement CRUD endpoints for seeds (POST, GET, PUT, DELETE).
-[x] **Testing**: Write integration tests for all CRUD routes (using Supertest).
-[ ] **Frontend**: Build seed catalog page with filters and dynamic cards.
-[ ] **Features**: Add image upload and swap request form.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please fork the repo and create a pull request.
+- [x] **Database**: Finalize SQL schema (tables: seeds, users, swaps).
+- [x] **Backend**: Implement CRUD endpoints for seeds (POST, GET, PUT, DELETE).
+- [x] **Testing**: Write integration tests for all CRUD routes (using Supertest).
+- [ ] **Frontend**: Build seed catalog page with filters and dynamic cards.
+- [ ] **Features**: Add image upload and swap request form.

@@ -42,16 +42,91 @@ return (
 )
 }
 
+function Filters({ seeds, onFilter }) {
+const [selectedType, setSelectedType]     = useState('')
+const [selectedSeason, setSelectedSeason] = useState('')
+
+// Construit les options dynamiquement depuis les données réelles
+const types   = [...new Set(seeds.map(s => s.type).filter(Boolean))]
+const seasons = [...new Set(seeds.map(s => s.season).filter(Boolean))]
+
+function handleTypeChange(e) {
+	const value = e.target.value
+	setSelectedType(value)
+	applyFilters(value, selectedSeason)
+}
+
+function handleSeasonChange(e) {
+	const value = e.target.value
+	setSelectedSeason(value)
+	applyFilters(selectedType, value)
+}
+
+function applyFilters(type, season) {
+	const filtered = seeds.filter(seed => {
+	const matchType   = type   ? seed.type   === type   : true
+	const matchSeason = season ? seed.season === season : true
+	return matchType && matchSeason
+	})
+	onFilter(filtered)
+}
+
+function handleReset() {
+	setSelectedType('')
+	setSelectedSeason('')
+	onFilter(seeds)
+}
+
+const hasActiveFilter = selectedType || selectedSeason
+
+return (
+	<div className="flex flex-wrap gap-3 mb-6 items-center">
+	<select
+		value={selectedType}
+		onChange={handleTypeChange}
+		className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+	>
+		<option value="">Tous les types</option>
+		{types.map(type => (
+		<option key={type} value={type}>{type}</option>
+		))}
+	</select>
+
+	<select
+		value={selectedSeason}
+		onChange={handleSeasonChange}
+		className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+	>
+		<option value="">Toutes les saisons</option>
+		{seasons.map(season => (
+		<option key={season} value={season}>{season}</option>
+		))}
+	</select>
+
+	{hasActiveFilter && (
+		<button
+		onClick={handleReset}
+		className="text-sm text-gray-400 hover:text-gray-600 underline"
+		>
+		Réinitialiser
+		</button>
+	)}
+	</div>
+)
+}
+
 function SeedList() {
-const [seeds, setSeeds] = useState([])
-const [loading, setLoading] = useState(true)
-const [error, setError] = useState(null)
+const [seeds, setSeeds]               = useState([])
+const [filteredSeeds, setFilteredSeeds] = useState([])
+const [loading, setLoading]           = useState(true)
+const [error, setError]               = useState(null)
 
 useEffect(() => {
 	fetch('http://localhost:3000/seeds')
 	.then(res => res.json())
 	.then(data => {
 		setSeeds(data)
+		setFilteredSeeds(data)
 		setLoading(false)
 	})
 	.catch(() => {
@@ -73,10 +148,20 @@ if (error) return (
 )
 
 return (
-	<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-	{seeds.map(seed => (
-		<SeedCard key={seed.id} seed={seed} />
-	))}
+	<div>
+	<Filters seeds={seeds} onFilter={setFilteredSeeds} />
+
+	{filteredSeeds.length === 0 ? (
+		<div className="flex items-center justify-center h-48 text-gray-400 text-sm">
+		Aucune graine pour ces filtres.
+		</div>
+	) : (
+		<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+		{filteredSeeds.map(seed => (
+			<SeedCard key={seed.id} seed={seed} />
+		))}
+		</div>
+	)}
 	</div>
 )
 }
