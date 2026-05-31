@@ -5,17 +5,18 @@ const pool = require('./db');
 const seedsRouter = require('./routes/seeds');
 const PORT = process.env.PORT || 3000;
 const app = express();
+const path = require('path');
 
 // Middleware
 const corsOptions = {
-  origin: ['http://localhost:3001'], // Remplace par l'URL de ton frontend
+  origin: ['http://localhost:5173'], // Remplace par l'URL de ton frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
 app.use(cors(corsOptions));
 app.use(express.json());
 
 // Sert les images comme fichiers statiques
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Utilise les routes pour les graines
 app.use('/seeds', seedsRouter);
