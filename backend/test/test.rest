@@ -1,0 +1,34 @@
+### Test 1 : GET /seeds
+GET http://localhost:3000/seeds
+
+### Test 2 : POST /seeds
+POST http://localhost:3000/seeds
+Content-Type: application/json
+
+{
+  "name": "Tomate Ancienne",
+  "type": "Légume",
+  "quantity": 50,
+  "season": "Été"
+}
+
+### Test 3 : POST /seeds (erreur) : Nom manquant
+POST http://localhost:3000/seeds
+Content-Type: application/json
+
+{
+  "type": "Légume"
+}
+
+### Test 4 : PUT /seeds/1
+PUT http://localhost:3000/seeds/1
+Content-Type: application/json
+
+{
+  "name": "Tomate Géante",
+  "type": "Légume",
+  "quantity": 100
+}
+
+### Test 5 : DELETE /seeds/1
+DELETE http://localhost:3000/seeds/1
