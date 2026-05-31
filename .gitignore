@@ -1,0 +1,27 @@
+# npm dependencies
+node_modules/
+
+# Environmental variables
+.env
+.env.local
+.env.*.local
+
+# Logs Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React build folder
+dist/
+build/
+
+# System files
+.DS_Store        # macOS
+Thumbs.db        # Windows
+desktop.ini      # Windows
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
