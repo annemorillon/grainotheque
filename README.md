@@ -92,5 +92,5 @@ it('POST /seeds → 201', async () => {
 - [x] **Database**: Finalize SQL schema (tables: seeds, users, swaps).
 - [x] **Backend**: Implement CRUD endpoints for seeds (POST, GET, PUT, DELETE).
 - [x] **Testing**: Write integration tests for all CRUD routes (using Supertest).
-- [ ] **Frontend**: Build seed catalog page with filters and dynamic cards.
+- [x] **Frontend**: Build seed catalog page with filters and dynamic cards.
 - [ ] **Features**: Add image upload and swap request form.

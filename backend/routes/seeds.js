@@ -23,7 +23,12 @@ router.post('/', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: "Le nom est obligatoire et ne peut pas être vide." })
     if (!type || !type.trim())
       return res.status(400).json({ error: "Le type est obligatoire et ne peut pas être vide." })
-
+    if (quantity !== undefined && quantity !== '') {
+      const qty = parseInt(quantity)
+      if (isNaN(qty) || qty < 0) {
+        return res.status(400).json({ error: "La quantité doit être un nombre positif." })
+      }
+    }
     const image_url = req.file ? `/uploads/${req.file.filename}` : null
 
     const result = await pool.query(
