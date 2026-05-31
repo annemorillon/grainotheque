@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
 const seedsRouter = require('./routes/seeds');
+const trocRequest = require('./routes/request');
 const PORT = process.env.PORT || 3000;
 const app = express();
 const path = require('path');
@@ -21,9 +22,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 // Utilise les routes pour les graines
 app.use('/seeds', seedsRouter);
 
+// Utilise les demandes de troc
+app.use('/request', trocRequest);
+
 // Route de base pour vérifier que le serveur fonctionne
 app.get('/', (req, res) => {
-  res.send('Bienvenue sur Grainotrope !');
+  res.send('Bienvenue sur Grainothèque !');
 });
 
 // Gestion des erreurs Multer

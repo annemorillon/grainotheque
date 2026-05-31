@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import SeedList from './SeedList'
 import AddSeedForm from './AddSeedForm'
-import ConfirmationModal from './ConfirmationModal' // 1. On importe la modale
+import ConfirmationModal from './ConfirmationModal'
+import TrocModal from './TrocModal'
 
 function App() {
   const [seeds, setSeeds] = useState([])
@@ -10,10 +11,12 @@ function App() {
   
   const [showForm, setShowForm] = useState(false)
   const [seedToEdit, setSeedToEdit] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  
+  // LE LIEN DU PROBLÈME ÉTAIT ICI : déclaration stricte de trocTarget en français
+  const [trocTarget, setTrocTarget] = useState(null) 
 
-  // 2. Nouvel état pour piloter la modale de suppression sur le site
-  const [deleteTarget, setDeleteTarget] = useState(null) 
-
+  // Charge les graines de la base de données au démarrage
   useEffect(() => {
     fetchSeeds()
   }, [])
@@ -57,26 +60,20 @@ function App() {
     setSeedToEdit(null)
   }
 
-  // 3. Cette fonction n'ouvre plus le "confirm()" du navigateur, 
-  // elle prépare juste la cible dans le State
   function handleRequestDelete(id, name) {
     setDeleteTarget({ id, name })
   }
 
-  // 4. C'est cette fonction qui effectue la vraie suppression après clic sur la modale
   async function handleConfirmDelete() {
     if (!deleteTarget) return
-
     try {
       const res = await fetch(`http://localhost:3000/seeds/${deleteTarget.id}`, { method: 'DELETE' })
       if (!res.ok) throw new Error()
-      
-      // On retire la graine du tableau à l'écran
       setSeeds(prev => prev.filter(s => s.id !== deleteTarget.id))
     } catch {
       alert('Erreur lors de la suppression de la graine')
     } finally {
-      setDeleteTarget(null) // On ferme la modale dans tous les cas
+      setDeleteTarget(null)
     }
   }
 
@@ -111,17 +108,25 @@ function App() {
           loading={loading} 
           error={error} 
           onEdit={handleStartEdit}
-          onDelete={handleRequestDelete} // Transmet la demande d'ouverture
+          onDelete={handleRequestDelete}
+          onTroc={setTrocTarget} // Passe bien le setter ici
         />
       </main>
 
-      {/* 5. Intégration de la modale dans l'UI globale */}
+      {/* Modale de confirmation de suppression */}
       <ConfirmationModal
         isOpen={deleteTarget !== null}
         title="Supprimer la graine"
         message={`Voulez-vous vraiment supprimer définitivement "${deleteTarget?.name}" de votre stock ?`}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* Modale de demande de Troc (Ligne 124) */}
+      <TrocModal
+        isOpen={trocTarget !== null} // Utilise trocTarget de manière sécurisée ici
+        seed={trocTarget}
+        onClose={() => setTrocTarget(null)}
       />
     </div>
   )

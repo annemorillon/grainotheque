@@ -7,7 +7,7 @@
 **Themes:** Agriculture, Social Impact
 **Focus for Beginners:** Mastering full **CRUD** operations (Create, Read, Update, Delete) and image uploads.
 
-In the world of eco-responsible gardening, enthusiasts love to exchange seeds. **Grainotrope** connects individuals to swap their seeds (tomatoes, flowers, etc.) and foster a community around sustainable agriculture.
+In the world of eco-responsible gardening, enthusiasts love to exchange seeds. **Grainothèque** connects individuals to swap their seeds (tomatoes, flowers, etc.) and foster a community around sustainable agriculture.
 
 ## Features
 
@@ -93,4 +93,4 @@ it('POST /seeds → 201', async () => {
 - [x] **Backend**: Implement CRUD endpoints for seeds (POST, GET, PUT, DELETE).
 - [x] **Testing**: Write integration tests for all CRUD routes (using Supertest).
 - [x] **Frontend**: Build seed catalog page with filters and dynamic cards.
-- [ ] **Features**: Add image upload and swap request form.
+- [x] **Features**: Add image upload and swap request form.

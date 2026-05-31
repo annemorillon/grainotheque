@@ -6,7 +6,7 @@ const TYPE_COLORS = {
   'Herbe':  'bg-yellow-100 text-yellow-700',
 }
 
-function SeedCard({ seed, onEdit, onDelete }) {
+function SeedCard({ seed, onEdit, onDelete, onTroc }) {
   const badgeColor = TYPE_COLORS[seed.type] ?? 'bg-gray-100 text-gray-700'
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef()
@@ -35,7 +35,6 @@ function SeedCard({ seed, onEdit, onDelete }) {
             <span className="text-4xl">🌱</span>
           )}
 
-          {/* Bouton d'action d'angle⚙️ */}
           <div className="absolute top-2 right-2" ref={menuRef}>
             <button
               type="button"
@@ -79,7 +78,11 @@ function SeedCard({ seed, onEdit, onDelete }) {
         </div>
       </div>
 
-      <button type="button" className="w-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium py-2 rounded-xl transition-colors">
+      <button 
+        type="button" 
+        onClick={() => onTroc(seed)}
+		className="w-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium py-2 rounded-xl transition-colors"
+      >
         Demander un troc
       </button>
     </div>
@@ -89,19 +92,16 @@ function SeedCard({ seed, onEdit, onDelete }) {
 function Filters({ seeds, onFilter }) {
   const [selectedType, setSelectedType]     = useState('')
   const [selectedSeason, setSelectedSeason] = useState('')
-  
-  // États d'ouverture des faux dropdowns
+
   const [openType, setOpenType]     = useState(false)
   const [openSeason, setOpenSeason] = useState(false)
 
-  // Références de clics extérieurs pour les menus
   const typeRef = useRef()
   const seasonRef = useRef()
 
   const types   = [...new Set(seeds.map(s => s.type).filter(Boolean))]
   const seasons = [...new Set(seeds.map(s => s.season).filter(Boolean))]
 
-  // Fermeture des menus au clic extérieur
   useEffect(() => {
     function handleClickOutside(e) {
       if (typeRef.current && !typeRef.current.contains(e.target)) setOpenType(false)
@@ -134,12 +134,11 @@ function Filters({ seeds, onFilter }) {
   return (
     <div className="flex flex-wrap gap-3 mb-6 items-center">
       
-      {/* MENU DÉROULANT TYPES */}
       <div className="relative" ref={typeRef}>
         <button
           type="button"
           onClick={() => { setOpenType(!openType); setOpenSeason(false); }}
-          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-[140px] text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100"
+          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-[140px] text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100 hover:border-green-300 transition-colors"
         >
           <span>{selectedType || "Tous les types"}</span>
           <span className="text-xs text-gray-400">⌵</span>
@@ -168,15 +167,14 @@ function Filters({ seeds, onFilter }) {
         )}
       </div>
 
-      {/* MENU DÉROULANT SAISONS */}
       <div className="relative" ref={seasonRef}>
         <button
           type="button"
           onClick={() => { setOpenSeason(!openSeason); setOpenType(false); }}
-          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-[155px] text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100"
+          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-[155px] text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100 hover:border-green-300 transition-colors"
         >
           <span>{selectedSeason || "Toutes les saisons"}</span>
-          <span className="text-xs text-gray-400">⌵</span>
+          <span className="text-xs text-gray-400">▼</span>
         </button>
 
         {openSeason && (
@@ -211,7 +209,7 @@ function Filters({ seeds, onFilter }) {
   )
 }
 
-function SeedList({ seeds, loading, error, onEdit, onDelete }) {
+function SeedList({ seeds, loading, error, onEdit, onDelete, onTroc }) {
   const [filteredSeeds, setFilteredSeeds] = useState([])
 
   if (loading) return <div className="flex items-center justify-center h-48 text-gray-400 text-sm">Chargement des graines...</div>
@@ -226,7 +224,13 @@ function SeedList({ seeds, loading, error, onEdit, onDelete }) {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredSeeds.map(seed => (
-            <SeedCard key={seed.id} seed={seed} onEdit={onEdit} onDelete={onDelete} />
+            <SeedCard 
+              key={seed.id} 
+              seed={seed} 
+              onEdit={onEdit} 
+              onDelete={onDelete} 
+              onTroc={onTroc} 
+			  />
           ))}
         </div>
       )}
