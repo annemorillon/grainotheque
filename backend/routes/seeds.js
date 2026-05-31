@@ -45,28 +45,48 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 // PUT /seeds/:id
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params
-    const { name, type } = req.body
+    const { name, type, quantity, season } = req.body
 
     if (!name || !name.trim())
       return res.status(400).json({ error: "Le nom est obligatoire et ne peut pas être vide." })
     if (!type || !type.trim())
       return res.status(400).json({ error: "Le type est obligatoire et ne peut pas être vide." })
+    if (quantity !== undefined && quantity !== '') {
+      const qty = parseInt(quantity)
+      if (isNaN(qty) || qty < 0) {
+        return res.status(400).json({ error: "La quantité doit être un nombre positif." })
+      }
+    }
 
-    const result = await pool.query(
-      'UPDATE seeds SET name = $1, type = $2 WHERE id = $3 RETURNING *',
-      [name, type, id]
-    )
+    let result;
+    if (req.file) {
+      const image_url = `/uploads/${req.file.filename}`
+      result = await pool.query(
+        `UPDATE seeds 
+         SET name = $1, type = $2, quantity = $3, season = $4, image_url = $5 
+         WHERE id = $6 RETURNING *`,
+        [name, type, quantity, season, image_url, id]
+      )
+    } else {
+      result = await pool.query(
+        `UPDATE seeds 
+         SET name = $1, type = $2, quantity = $3, season = $4 
+         WHERE id = $5 RETURNING *`,
+        [name, type, quantity, season, id]
+      )
+    }
 
     if (result.rows.length === 0)
       return res.status(404).json({ error: "Graine non trouvée" })
 
     res.json(result.rows[0])
+
   } catch (err) {
-    console.error('Erreur serveur:', err);
-    res.status(500).json({ error: "Une erreur serveur est survenue" })
+    console.error('Erreur serveur lors de la modification:', err);
+    res.status(500).json({ error: "Une erreur serveur est survenue lors de la modification" })
   }
 });
 
