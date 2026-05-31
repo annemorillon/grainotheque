@@ -14,6 +14,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Sert les images comme fichiers statiques
+app.use('/uploads', express.static('uploads'));
+
 // Utilise les routes pour les graines
 app.use('/seeds', seedsRouter);
 
@@ -22,10 +25,13 @@ app.get('/', (req, res) => {
   res.send('Bienvenue sur Grainotrope !');
 });
 
-// // Démarre le serveur
-// app.listen(PORT, () => {
-//   console.log(`Serveur démarré sur http://localhost:${PORT}`);
-// });
+// Gestion des erreurs Multer
+app.use((err, req, res, next) => {
+  if (err.message === 'Format non supporté. Utilisez JPG, PNG ou WebP.') {
+    return res.status(400).json({ error: err.message });
+  }
+  res.status(500).json({ error: err.message });
+});
 
 // Exporte l'app pour les tests (Supertest)
 module.exports = app;

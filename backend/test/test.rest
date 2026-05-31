@@ -32,3 +32,103 @@ Content-Type: application/json
 
 ### Test 5 : DELETE /seeds/1
 DELETE http://localhost:3000/seeds/1
+
+### Test 6 : POST /seeds avec image (multipart/form-data)
+# -------------------------------------------------------
+# OPTION A — REST Client (VS Code)
+# Fonctionne si tu as l'extension "REST Client" (humao.rest-client)
+# Remplace le chemin par un vrai fichier image sur ta machine
+# Attention : le boundary doit être identique dans le header et le body
+
+### Test 6a : POST /seeds avec image (REST Client)
+POST http://localhost:3000/seeds
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="name"
+
+Tomate Cœur de Bœuf
+------Boundary
+Content-Disposition: form-data; name="type"
+
+Légume
+------Boundary
+Content-Disposition: form-data; name="quantity"
+
+30
+------Boundary
+Content-Disposition: form-data; name="season"
+
+Printemps
+------Boundary
+Content-Disposition: form-data; name="image"; filename="tomate.jpg"
+Content-Type: image/jpeg
+
+< /chemin/absolu/vers/tomate.jpg
+------Boundary--
+
+# -------------------------------------------------------
+# OPTION B — curl (terminal)
+# Plus fiable pour les uploads, copie-colle dans ton terminal
+# -------------------------------------------------------
+
+### Test 6b : curl (à coller dans le terminal, pas exécutable ici)
+# curl -X POST http://localhost:3000/seeds \
+#   -F "name=Tomate Cœur de Bœuf" \
+#   -F "type=Légume" \
+#   -F "quantity=30" \
+#   -F "season=Printemps" \
+#   -F "image=@/chemin/vers/ta/photo.jpg"
+
+# -------------------------------------------------------
+# Test 7 : POST /seeds avec image (erreur) : format non supporté
+# -------------------------------------------------------
+# Même structure que 6a mais avec un .pdf — doit retourner 400
+
+### Test 7 : POST /seeds image format invalide (REST Client)
+POST http://localhost:3000/seeds
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="name"
+
+Basilic Grand Vert
+------Boundary
+Content-Disposition: form-data; name="image"; filename="document.pdf"
+Content-Type: application/pdf
+
+< /chemin/absolu/vers/document.pdf
+------Boundary--
+
+# curl équivalent :
+# curl -X POST http://localhost:3000/seeds \
+#   -F "name=Basilic Grand Vert" \
+#   -F "image=@/chemin/vers/document.pdf"
+
+# -------------------------------------------------------
+# Test 8 : POST /seeds sans image (image_url doit être null)
+# -------------------------------------------------------
+
+### Test 8 : POST /seeds sans image
+POST http://localhost:3000/seeds
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="name"
+
+Basilic Grand Vert
+------Boundary
+Content-Disposition: form-data; name="type"
+
+Herbe
+------Boundary
+Content-Disposition: form-data; name="quantity"
+
+10
+------Boundary
+Content-Disposition: form-data; name="season"
+
+Été
+------Boundary--
+
+# Réponse attendue : 201 avec image_url: null

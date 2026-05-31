@@ -25,3 +25,6 @@ desktop.ini      # Windows
 .idea/
 *.swp
 *.swo
+
+# Tests
+test/fixtures/
