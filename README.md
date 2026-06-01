@@ -9,6 +9,14 @@
 
 In the world of eco-responsible gardening, enthusiasts love to exchange seeds. **Grainothèque** connects individuals to swap their seeds (tomatoes, flowers, etc.) and foster a community around sustainable agriculture.
 
+## 🌐 Liens du Projet en Production
+
+Le projet est entièrement déployé et accessible en ligne :
+
+* **🖥️ Application Frontend (Vercel) :** [Visiter la Grainothèque](https://TON-LIEN-VERCEL.vercel.app)
+* **⚙️ API Backend (Railway) :** [Page d'accueil de l'API](https://grainotheque-production.up.railway.app/)
+* **📊 Données :** [Endpoint des graines (Seeds)](https://grainotheque-production.up.railway.app/seeds)
+
 ## Features
 
 ### Seed catalog
@@ -94,3 +102,4 @@ it('POST /seeds → 201', async () => {
 - [x] **Testing**: Write integration tests for all CRUD routes (using Supertest).
 - [x] **Frontend**: Build seed catalog page with filters and dynamic cards.
 - [x] **Features**: Add image upload and swap request form.
+- [x] **Deployment**: Deploy backend (Railway) and frontend (Vercel).

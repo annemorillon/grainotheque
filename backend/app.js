@@ -11,7 +11,10 @@ const path = require('path');
 // Middleware
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = ['https://grainotheque-production.up.railway.app'];
+    const allowedOrigins = [
+      'https://grainotheque-production.up.railway.app',
+      'https://grainotheque-3yu7d58dk-annemorillons-projects.vercel.app/'
+    ];
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
