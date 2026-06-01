@@ -13,7 +13,7 @@ In the world of eco-responsible gardening, enthusiasts love to exchange seeds. *
 
 Le projet est entièrement déployé et accessible en ligne :
 
-* **🖥️ Application Frontend (Vercel) :** [Visiter la Grainothèque](https://TON-LIEN-VERCEL.vercel.app)
+* **🖥️ Application Frontend (Vercel) :** [Visiter la Grainothèque](https://grainotheque-one.vercel.app/)
 * **⚙️ API Backend (Railway) :** [Page d'accueil de l'API](https://grainotheque-production.up.railway.app/)
 * **📊 Données :** [Endpoint des graines (Seeds)](https://grainotheque-production.up.railway.app/seeds)
 
