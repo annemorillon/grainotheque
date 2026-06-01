@@ -15,7 +15,7 @@ const corsOptions = {
       'https://grainotheque-production.up.railway.app',
       'https://grainotheque-3yu7d58dk-annemorillons-projects.vercel.app/'
     ];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || origin.endsWith('.vercel.app') || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Bloqué par CORS'));
