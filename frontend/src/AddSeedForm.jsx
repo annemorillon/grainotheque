@@ -18,7 +18,7 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
         quantity: seedToEdit.quantity || '',
         season: seedToEdit.season || '',
       })
-      setPreviewUrl(seedToEdit.image_url ? `http://localhost:3000${seedToEdit.image_url}` : null)
+      setPreviewUrl(seedToEdit.image_url ? `https://grainotheque-production.up.railway.app/${seedToEdit.image_url}` : null)
     } else {
       setForm({ name: '', type: '', quantity: '', season: '' })
       setPreviewUrl(null)
@@ -65,7 +65,7 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
     if (imageFile) data.append('image', imageFile)
 
     const isEditing = !!seedToEdit
-    const url = isEditing ? `http://localhost:3000/seeds/${seedToEdit.id}` : 'http://localhost:3000/seeds'
+    const url = isEditing ? `https://grainotheque-production.up.railway.app/seeds/${seedToEdit.id}` : 'https://grainotheque-production.up.railway.app/seeds'
 
     const method = isEditing ? 'PUT' : 'POST'
 

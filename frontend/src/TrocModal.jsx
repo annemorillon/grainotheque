@@ -21,7 +21,7 @@ function TrocModal({ isOpen, seed, onClose }) {
     setStatus(null)
 
     try {
-      const res = await fetch('http://localhost:3000/request', { // Ajuste l'URL selon ton préfixe d'API
+      const res = await fetch('https://grainotheque-production.up.railway.app/request', { // Ajuste l'URL selon ton préfixe d'API
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

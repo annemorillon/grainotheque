@@ -10,8 +10,16 @@ const path = require('path');
 
 // Middleware
 const corsOptions = {
-  origin: ['http://localhost:5173'], // Remplace par l'URL de ton frontend
+  origin: function (origin, callback) {
+    const allowedOrigins = ['https://grainotheque-production.up.railway.app'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqué par CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 };
 app.use(cors(corsOptions));
 app.use(express.json());

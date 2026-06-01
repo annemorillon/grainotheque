@@ -23,7 +23,7 @@ function App() {
 
   function fetchSeeds() {
     setLoading(true)
-    fetch('http://localhost:3000/seeds')
+    fetch('https://grainotheque-production.up.railway.app/seeds')
       .then(res => res.json())
       .then(data => {
         setSeeds(data)
@@ -67,7 +67,7 @@ function App() {
   async function handleConfirmDelete() {
     if (!deleteTarget) return
     try {
-      const res = await fetch(`http://localhost:3000/seeds/${deleteTarget.id}`, { method: 'DELETE' })
+      const res = await fetch(`https://grainotheque-production.up.railway.app/seeds/${deleteTarget.id}`, { method: 'DELETE' })
       if (!res.ok) throw new Error()
       setSeeds(prev => prev.filter(s => s.id !== deleteTarget.id))
     } catch {
