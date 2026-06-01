@@ -138,7 +138,7 @@ function Filters({ seeds, onFilter }) {
         <button
           type="button"
           onClick={() => { setOpenType(!openType); setOpenSeason(false); }}
-          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-[140px] text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100 hover:border-green-300 transition-colors"
+          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-35 text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100 hover:border-green-300 transition-colors"
         >
           <span>{selectedType || "Tous les types"}</span>
           <span className="text-xs text-gray-400">⌵</span>
@@ -171,7 +171,7 @@ function Filters({ seeds, onFilter }) {
         <button
           type="button"
           onClick={() => { setOpenSeason(!openSeason); setOpenType(false); }}
-          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-[155px] text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100 hover:border-green-300 transition-colors"
+          className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-700 min-w-38.75 text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-100 hover:border-green-300 transition-colors"
         >
           <span>{selectedSeason || "Toutes les saisons"}</span>
           <span className="text-xs text-gray-400">▼</span>
