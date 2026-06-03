@@ -34,9 +34,9 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
     const file = e.target.files[0]
     if (!file) return
 
-    const MAX_SIZE = 100 * 1024
+    const MAX_SIZE = 5000 * 1024
     if (file.size > MAX_SIZE) {
-      setError("L'image ne doit pas dépasser 100 Ko.")
+      setError("L'image ne doit pas dépasser 5000 Ko.")
       e.target.value = ""
       return
     }
