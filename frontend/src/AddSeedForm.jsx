@@ -140,8 +140,7 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
         <label className="text-xs font-medium text-gray-600">Photo</label>
         {previewUrl ? (
           <div className="relative w-full h-36 rounded-xl overflow-hidden bg-gray-50">
-            <img src={previewUrl} alt="Prévisualisation" className="w-full h-full object-cover" />
-            <button type="button" onClick={handleRemoveImage} className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 text-xs text-gray-500 hover:text-red-500 shadow flex items-center justify-center">✕</button>
+          setPreviewUrl(seedToEdit.image_url ? seedToEdit.image_url : null)
           </div>
         ) : (
           <label className="w-full h-24 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-green-300 transition-colors">

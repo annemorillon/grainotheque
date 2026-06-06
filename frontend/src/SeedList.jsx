@@ -27,7 +27,7 @@ function SeedCard({ seed, onEdit, onDelete, onTroc }) {
         <div className="w-full h-36 bg-gray-50 rounded-xl overflow-hidden flex items-center justify-center relative">
           {seed.image_url ? (
             <img
-              src={`https://grainotheque-production.up.railway.app/${seed.image_url}`}
+              src={seed.image_url} 
               alt={seed.name}
               className="w-full h-full object-cover"
             />
