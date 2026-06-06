@@ -4,6 +4,17 @@ const pool = require('../db');
 const upload = require('../middleware/upload');
 const supabase = require('../supabaseClient');
 
+// GET /seeds
+router.get('/', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM seeds ORDER BY created_at DESC')
+    res.json(result.rows)
+  } catch (err) {
+    console.error('Erreur serveur:', err);
+    res.status(500).json({ error: "Une erreur serveur est survenue" })
+  }
+});
+
 // POST /seeds — avec image vers Supabase
 router.post('/', upload.single('image'), async (req, res) => {
   try {
@@ -95,6 +106,22 @@ router.put('/:id', upload.single('image'), async (req, res) => {
   } catch (err) {
     console.error('Erreur:', err)
     res.status(500).json({ error: "Erreur serveur" })
+  }
+});
+
+// DELETE /seeds/:id
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const result = await pool.query('DELETE FROM seeds WHERE id = $1 RETURNING *', [id])
+
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: "Graine introuvable, impossible de supprimer" })
+
+    res.json({ message: "La graine a bien été supprimée avec succès !" })
+  } catch (err) {
+    console.error('Erreur serveur:', err);
+    res.status(500).json({ error: "Une erreur serveur est survenue" })
   }
 });
 
