@@ -27,9 +27,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Sert les images comme fichiers statiques
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
-
 // Utilise les routes pour les graines
 app.use('/seeds', seedsRouter);
 
