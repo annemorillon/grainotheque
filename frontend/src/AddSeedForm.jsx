@@ -18,7 +18,7 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
         quantity: seedToEdit.quantity || '',
         season: seedToEdit.season || '',
       })
-      setPreviewUrl(seedToEdit.image_url ? `https://grainotheque-production.up.railway.app/${seedToEdit.image_url}` : null)
+      setPreviewUrl(seedToEdit.image_url ? seedToEdit.image_url : null)
     } else {
       setForm({ name: '', type: '', quantity: '', season: '' })
       setPreviewUrl(null)
@@ -140,7 +140,8 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
         <label className="text-xs font-medium text-gray-600">Photo</label>
         {previewUrl ? (
           <div className="relative w-full h-36 rounded-xl overflow-hidden bg-gray-50">
-          setPreviewUrl(seedToEdit.image_url ? seedToEdit.image_url : null)
+            <img src={previewUrl} alt="preview" className="w-full h-full object-cover" />
+            <button type="button" onClick={handleRemoveImage} className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs">Retirer</button>
           </div>
         ) : (
           <label className="w-full h-24 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-green-300 transition-colors">
