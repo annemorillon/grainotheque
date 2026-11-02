@@ -27,8 +27,9 @@ function App() {
         setSeeds(data)
         setLoading(false)
       })
-      .catch(() => {
-        setError('Impossible de charger les graines')
+      .catch(err => {
+        console.error('Erreur au chargement des graines:', err)
+        setError(`Impossible de charger les graines : ${err.message}`)
         setLoading(false)
       })
   }
