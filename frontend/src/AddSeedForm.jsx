@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
+import { saveSeed, uploadSeedImage } from './supabase'
 
 const TYPES   = ['Légume', 'Fleur', 'Herbe', 'Fruit', 'Arbre']
 const SEASONS = ['Printemps', 'Été', 'Automne', 'Hiver']
 
-function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose ici
+function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) {
   const [form, setForm] = useState({ name: '', type: '', quantity: '', season: '' })
   const [imageFile, setImageFile]       = useState(null)
   const [previewUrl, setPreviewUrl]     = useState(null)
   const [submitting, setSubmitting]     = useState(false)
   const [error, setError]               = useState(null)
+  const [removeExistingImage, setRemoveExistingImage] = useState(false)
 
   useEffect(() => {
     if (seedToEdit) {
@@ -19,9 +21,11 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
         season: seedToEdit.season || '',
       })
       setPreviewUrl(seedToEdit.image_url ? seedToEdit.image_url : null)
+      setRemoveExistingImage(false)
     } else {
       setForm({ name: '', type: '', quantity: '', season: '' })
       setPreviewUrl(null)
+      setRemoveExistingImage(false)
     }
   }, [seedToEdit])
 
@@ -43,6 +47,7 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
 
     setError(null)
     setImageFile(file)
+    setRemoveExistingImage(false)
     setPreviewUrl(URL.createObjectURL(file))
   }
 
@@ -50,6 +55,7 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
     setImageFile(null)
     if (previewUrl && previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl)
     setPreviewUrl(null)
+    setRemoveExistingImage(true)
   }
 
   async function handleSubmit(e) {
@@ -57,31 +63,26 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
     setError(null)
     setSubmitting(true)
 
-    const data = new FormData()
-    data.append('name',     form.name)
-    data.append('type',     form.type)
-    data.append('quantity', form.quantity)
-    data.append('season',   form.season)
-    if (imageFile) data.append('image', imageFile)
-
     const isEditing = !!seedToEdit
-    const url = isEditing ? `https://grainotheque-production.up.railway.app/seeds/${seedToEdit.id}` : 'https://grainotheque-production.up.railway.app/seeds'
-
-    const method = isEditing ? 'PUT' : 'POST'
+    // const method = isEditing ? 'PUT' : 'POST'
 
     try {
-      const res = await fetch(url, { method, body: data })
-
-      if (!res.ok) {
-        const json = await res.json()
-        throw new Error(json.error || 'Erreur lors de l\'enregistrement')
+      let image_url = removeExistingImage ? null : (seedToEdit?.image_url || null)
+      if (imageFile) {
+        image_url = await uploadSeedImage(imageFile)
       }
 
-      const savedSeed = await res.json()
+      const seedData = {
+        name: form.name.trim(),
+        type: form.type,
+        quantity: form.quantity === '' ? null : Number(form.quantity),
+        season: form.season || null,
+        image_url,
+      }
+      const savedSeed = await saveSeed(seedData, isEditing ? seedToEdit.id : null)
       setForm({ name: '', type: '', quantity: '', season: '' })
       handleRemoveImage()
 
-      // On passe 'PUT' fictivement au parent si on était en train d'éditer pour qu'il mette à jour son tableau
       onSeedAdded(savedSeed, isEditing ? 'PUT' : 'POST')
 
     } catch (err) {
@@ -93,7 +94,6 @@ function AddSeedForm({ onSeedAdded, seedToEdit, onClose }) { // Ajout de onClose
 
   return (
     <form onSubmit={handleSubmit} className="relative bg-white border border-gray-100 rounded-2xl p-5 flex flex-col gap-4 shadow-md max-w-md mx-auto w-full">
-      {/* Bouton Fermer / Annuler en haut à droite */}
       <button 
         type="button" 
         onClick={onClose} 

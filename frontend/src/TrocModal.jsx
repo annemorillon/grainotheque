@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
+import { submitRequest } from './supabase'
 
 function TrocModal({ isOpen, seed, onClose }) {
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [status, setStatus] = useState(null) // 'success' ou 'error'
+  const [status, setStatus] = useState(null)
 
   // Pré-remplit le message dès que la modale s'ouvre pour une graine spécifique
   useEffect(() => {
@@ -21,26 +22,16 @@ function TrocModal({ isOpen, seed, onClose }) {
     setStatus(null)
 
     try {
-      const res = await fetch('https://grainotheque-production.up.railway.app/request', { // Ajuste l'URL selon ton préfixe d'API
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          seed_id: seed.id,
-          message: message,
-        }),
-      })
-
-      if (!res.ok) throw new Error()
+      await submitRequest(seed.id, message.trim())
 
       setStatus('success')
       // Ferme la modale automatiquement après 1.5 seconde en cas de succès
       setTimeout(() => {
         onClose()
       }, 1500)
-    } catch {
-      setStatus('error')
+    } catch (err) {
+      console.error('Erreur lors de l’envoi de la demande de troc:', err)
+      setStatus(err.message || 'Une erreur est survenue. Réessayez.')
     } finally {
       setSubmitting(false)
     }
@@ -68,9 +59,9 @@ function TrocModal({ isOpen, seed, onClose }) {
           </div>
         )}
 
-        {status === 'error' && (
+        {status && status !== 'success' && (
           <div className="text-sm text-red-500 bg-red-50 rounded-xl px-3 py-2 text-center font-medium">
-            ❌ Une erreur est survenue. Réessayez.
+            ❌ {status}
           </div>
         )}
 

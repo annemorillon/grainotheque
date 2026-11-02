@@ -3,6 +3,7 @@ import SeedList from './SeedList'
 import AddSeedForm from './AddSeedForm'
 import ConfirmationModal from './ConfirmationModal'
 import TrocModal from './TrocModal'
+import { deleteSeed, listSeeds } from './supabase'
 
 function App() {
   const [seeds, setSeeds] = useState([])
@@ -13,18 +14,15 @@ function App() {
   const [seedToEdit, setSeedToEdit] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   
-  // LE LIEN DU PROBLÈME ÉTAIT ICI : déclaration stricte de trocTarget en français
   const [trocTarget, setTrocTarget] = useState(null) 
 
-  // Charge les graines de la base de données au démarrage
   useEffect(() => {
     fetchSeeds()
   }, [])
 
   function fetchSeeds() {
     setLoading(true)
-    fetch('https://grainotheque-production.up.railway.app/seeds')
-      .then(res => res.json())
+    listSeeds()
       .then(data => {
         setSeeds(data)
         setLoading(false)
@@ -67,8 +65,7 @@ function App() {
   async function handleConfirmDelete() {
     if (!deleteTarget) return
     try {
-      const res = await fetch(`https://grainotheque-production.up.railway.app/seeds/${deleteTarget.id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error()
+      await deleteSeed(deleteTarget.id)
       setSeeds(prev => prev.filter(s => s.id !== deleteTarget.id))
     } catch {
       alert('Erreur lors de la suppression de la graine')
@@ -109,11 +106,10 @@ function App() {
           error={error} 
           onEdit={handleStartEdit}
           onDelete={handleRequestDelete}
-          onTroc={setTrocTarget} // Passe bien le setter ici
+          onTroc={setTrocTarget}
         />
       </main>
 
-      {/* Modale de confirmation de suppression */}
       <ConfirmationModal
         isOpen={deleteTarget !== null}
         title="Supprimer la graine"
@@ -122,9 +118,8 @@ function App() {
         onCancel={() => setDeleteTarget(null)}
       />
 
-      {/* Modale de demande de Troc (Ligne 124) */}
       <TrocModal
-        isOpen={trocTarget !== null} // Utilise trocTarget de manière sécurisée ici
+        isOpen={trocTarget !== null}
         seed={trocTarget}
         onClose={() => setTrocTarget(null)}
       />

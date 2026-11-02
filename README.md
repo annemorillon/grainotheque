@@ -1,105 +1,65 @@
-# Grainothèque: The seed swap tinder
+# Grainothèque
 
-**A social and eco-friendly platform for swapping seeds.**
+A small web app for listing seeds and submitting swap requests.
 
-## About the project
+## Production
 
-**Themes:** Agriculture, Social Impact
-**Focus for Beginners:** Mastering full **CRUD** operations (Create, Read, Update, Delete) and image uploads.
+- **App:** [grainotheque-one.vercel.app](https://grainotheque-one.vercel.app/)
+- **Frontend hosting:** Vercel
+- **Database, Data API, and image storage:** Supabase
 
-In the world of eco-responsible gardening, enthusiasts love to exchange seeds. **Grainothèque** connects individuals to swap their seeds (tomatoes, flowers, etc.) and foster a community around sustainable agriculture.
-
-## 🌐 Liens du Projet en Production
-
-Le projet est entièrement déployé et accessible en ligne :
-
-* **🖥️ Application Frontend (Vercel) :** [Visiter la Grainothèque](https://grainotheque-one.vercel.app/)
-* **⚙️ API Backend (Railway) :** [Page d'accueil de l'API](https://grainotheque-production.up.railway.app/)
-* **📊 Données :** [Endpoint des graines (Seeds)](https://grainotheque-production.up.railway.app/seeds)
+The frontend calls Supabase directly. There is no Express API in the active application flow.
 
 ## Features
 
-### Seed catalog
-- A homepage listing available seeds with **server-side filtering** (by plant type, sowing period).
-- Dynamic cards displaying seed images, names, and availability.
-
-### My garden space
-- A form to add seeds, with client-side validation and image upload (stored via Cloudinary or local storage).
-- Each seed entry includes: image, description, quantity, and owner contact info.
-
-### Swap request system
-- A "request a swap" button that opens a pre-filled contact form (using the seed owner’s email).
-- Messages are sent via a simple email service (e.g., Nodemailer).
-
-## What this project demonstrates
-
-- **Database Design**: Structuring a relational database (PostgreSQL) for seeds, users, and swaps.
-- **Full-Stack Development**: Building a REST API (Node/Express) and a dynamic frontend (React).
-- **Form Handling**: Validating user inputs (e.g., seed name, quantity, image upload).
-- **UI/UX**: Displaying dynamic seed cards with filters and user interactions.
+- Browse seeds and filter the list by type and sowing season. Filtering happens in the browser.
+- Add, edit, and delete seed listings.
+- Upload seed photos to the public Supabase Storage bucket named `seeds-images`.
+- Submit a swap request with a message. Requests are stored in the `requests` table; the app does not send email.
 
 ## Tech stack
-   Category     | Technology      |
- | ------------ | --------------- |
- | **Frontend** | React           |
- | **Backend**  | Node.js/Express |
- | **Database** | PostgreSQL      |
 
-**Why a unified JavaScript stack?**
-JavaScript is one of the most widely used programming languages today. Using a full JavaScript stack (React for frontend, Node.js/Express for backend, and PostgreSQL for the database) allows for a **consistent and cohesive development experience**. React is a popular choice for building interactive user interfaces, while Node.js and PostgreSQL provide a solid foundation for the backend. This combination benefits from a **large ecosystem** (npm packages, extensive documentation) and makes it easier to switch between frontend and backend development without changing languages.
+- React and Vite
+- Supabase Postgres and its REST Data API
+- Supabase Storage
+- Vercel
 
-## Testing Approach
+## Run locally
 
-### TDD-Light Principle
-To avoid blocking progress while learning, I use a **"validate first, test after"** approach: I code until the feature works (tested manually in Postman), then write integration tests to ensure the expected behavior is maintained. This ensures practical test coverage without slowing down development.
+Requirements: Node.js and a Supabase project with the `seeds` and `requests` tables and a `seeds-images` Storage bucket.
 
-**When to write a test?**
-- Route returns 201 for valid data
-- Route returns 400 if the name is empty
-- DELETE removes the row from the database
-- A function "is in season?" returns true/false
+1. Clone the repository and enter the frontend directory:
 
-**Justification:**
-Integration tests are written after manual validation to consolidate established behaviors. Target coverage: all CRUD routes + business error cases (e.g., empty seed name, invalid quantity).
-
-### Example Test (Supertest)
-
-```javascript
-it('POST /seeds → 201', async () => {
-  const res = await request(app)
-    .post('/seeds')
-    .send({ name: 'Tomato', type: 'vegetable' });
-  expect(res.status).toBe(201);
-  expect(res.body.name).toBe('Tomato');
-});
-```
-
-> *Full test files example in folder: [test](./backend/test/)*
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js
-- PostgreSQL
-
-### Installation
-
-1. Clone the repo:
-  ```bash
+   ```bash
    git clone git@github.com:annemorillon/grainotheque.git
-  ```
-2. Install dependencies:
-  ```bash
-   npm install
-  ```
-3. Set up your `.env` file with database and API keys.
+   cd grainotheque/frontend
+   ```
 
-## Roadmap
+2. Install the frontend dependencies:
 
-- [x] **Database**: Finalize SQL schema (tables: seeds, users, swaps).
-- [x] **Backend**: Implement CRUD endpoints for seeds (POST, GET, PUT, DELETE).
-- [x] **Testing**: Write integration tests for all CRUD routes (using Supertest).
-- [x] **Frontend**: Build seed catalog page with filters and dynamic cards.
-- [x] **Features**: Add image upload and swap request form.
-- [x] **Deployment**: Deploy backend (Railway) and frontend (Vercel).
+   ```bash
+   npm ci
+   ```
+
+3. In `frontend/`, create `.env.local` with your Supabase project URL and publishable key. The existing variable name contains `ANON`, but its value can be the current publishable key:
+
+   ```env
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-publishable-key
+   ```
+
+   The publishable key is intended for browser use. Never put a Supabase secret or service-role key in a `VITE_` variable.
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+Vite prints the local URL, usually `http://localhost:5173`.
+
+## Supabase access
+
+The frontend uses the Supabase Data API and Storage API with the publishable key. Configure table grants and Row Level Security policies for the operations the app needs. Since the current app has no user accounts, policies that allow anonymous writes also allow visitors to change the public seed catalog and submit requests.
+
+The Storage bucket must be named `seeds-images`. Seed photos are public so the app can display their URLs. Set its file size limit to at least the frontend limit of 5,000 KiB.
